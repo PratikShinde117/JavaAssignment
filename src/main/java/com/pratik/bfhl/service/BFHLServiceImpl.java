@@ -2,8 +2,9 @@ package com.pratik.bfhl.service;
 
 import com.pratik.bfhl.dto.RequestDTO;
 import com.pratik.bfhl.dto.ResponseDTO;
-import org.springframework.stereotype.Service;
 import com.pratik.bfhl.dto.SummaryDTO;
+import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -20,12 +21,13 @@ public class BFHLServiceImpl implements BFHLService {
     ) {
 
         Set<String> unique = new HashSet<>();
-        int invalidElements = 0;
-
-String longestAlphabeticValue = null;
-String shortestAlphabeticValue = null;
 
         boolean containsDuplicates = false;
+
+        int invalidElements = 0;
+
+        String longestAlphabeticValue = null;
+        String shortestAlphabeticValue = null;
 
         List<String> oddNumbers = new ArrayList<>();
         List<String> evenNumbers = new ArrayList<>();
@@ -34,7 +36,7 @@ String shortestAlphabeticValue = null;
 
         List<BigDecimal> numbers = new ArrayList<>();
 
-        Map<String,Integer> alphabetFrequency =
+        Map<String, Integer> alphabetFrequency =
                 new HashMap<>();
 
         int vowelCount = 0;
@@ -45,35 +47,36 @@ String shortestAlphabeticValue = null;
         Pattern alphanumericPattern =
                 Pattern.compile("[A-Za-z]+|\\d+");
 
-        for(String item : request.getData()) {
+        for (String item : request.getData()) {
 
-            if(item == null) {
+            if (item == null) {
                 invalidElements++;
                 continue;
             }
 
             item = item.trim();
 
-            if(item.isEmpty()) {
-    invalidElements++;
-    continue;
-}
+            if (item.isEmpty()) {
+                invalidElements++;
+                continue;
+            }
 
-            if(!unique.add(item)) {
+            if (!unique.add(item)) {
                 containsDuplicates = true;
                 continue;
             }
 
-            if(numberPattern.matcher(item).matches()) {
+            // Pure Number
+            if (numberPattern.matcher(item).matches()) {
 
                 BigDecimal num =
                         new BigDecimal(item);
 
                 numbers.add(num);
 
-                if(num.scale() == 0) {
+                if (num.scale() == 0) {
 
-                    if(num.remainder(
+                    if (num.remainder(
                             BigDecimal.valueOf(2))
                             .compareTo(BigDecimal.ZERO)
                             == 0) {
@@ -81,8 +84,7 @@ String shortestAlphabeticValue = null;
                         evenNumbers.add(
                                 num.toPlainString()
                         );
-                    }
-                    else {
+                    } else {
 
                         oddNumbers.add(
                                 num.toPlainString()
@@ -93,26 +95,29 @@ String shortestAlphabeticValue = null;
                 continue;
             }
 
-            if(item.matches("[A-Za-z]+")) {
+            // Pure Alphabet
+            if (item.matches("[A-Za-z]+")) {
 
                 String upper =
                         item.toUpperCase();
 
-                if(longestAlphabeticValue == null ||
-        upper.length() > longestAlphabeticValue.length()) {
-
-    longestAlphabeticValue = upper;
-}
-
-if(shortestAlphabeticValue == null ||
-        upper.length() < shortestAlphabeticValue.length()) {
-
-    shortestAlphabeticValue = upper;
-}
-
                 alphabets.add(upper);
 
-                for(char ch :
+                if (longestAlphabeticValue == null
+                        || upper.length() >
+                        longestAlphabeticValue.length()) {
+
+                    longestAlphabeticValue = upper;
+                }
+
+                if (shortestAlphabeticValue == null
+                        || upper.length() <
+                        shortestAlphabeticValue.length()) {
+
+                    shortestAlphabeticValue = upper;
+                }
+
+                for (char ch :
                         upper.toCharArray()) {
 
                     String letter =
@@ -127,55 +132,57 @@ if(shortestAlphabeticValue == null ||
                                     ) + 1
                     );
 
-                    if("AEIOU".contains(letter))
+                    if ("AEIOU".contains(letter)) {
                         vowelCount++;
+                    }
                 }
 
                 continue;
             }
 
-            if(item.matches("[A-Za-z0-9]+")) {
+            // Alphanumeric
+            if (item.matches("[A-Za-z0-9]+")) {
 
                 Matcher matcher =
                         alphanumericPattern
                                 .matcher(item);
 
-                while(matcher.find()) {
+                while (matcher.find()) {
 
                     String token =
                             matcher.group();
 
-                    if(token.matches("\\d+")) {
+                    if (token.matches("\\d+")) {
 
                         numbers.add(
                                 new BigDecimal(token)
                         );
-                    }
-                    else {
+                    } else {
 
                         String upper =
                                 token.toUpperCase();
-                                if(longestAlphabeticValue == null
-        || upper.length() >
-           longestAlphabeticValue.length()) {
 
-    longestAlphabeticValue = upper;
-}
+                        alphabets.add(upper);
 
-if(shortestAlphabeticValue == null
-        || upper.length() <
-           shortestAlphabeticValue.length()) {
+                        if (longestAlphabeticValue == null
+                                || upper.length() >
+                                longestAlphabeticValue.length()) {
 
-    shortestAlphabeticValue = upper;
-}
+                            longestAlphabeticValue = upper;
+                        }
 
-                        for(char ch :
+                        if (shortestAlphabeticValue == null
+                                || upper.length() <
+                                shortestAlphabeticValue.length()) {
+
+                            shortestAlphabeticValue = upper;
+                        }
+
+                        for (char ch :
                                 upper.toCharArray()) {
 
                             String letter =
                                     String.valueOf(ch);
-
-                            alphabets.add(letter);
 
                             alphabetFrequency.put(
                                     letter,
@@ -186,9 +193,9 @@ if(shortestAlphabeticValue == null
                                             ) + 1
                             );
 
-                            if("AEIOU"
-                                    .contains(letter))
+                            if ("AEIOU".contains(letter)) {
                                 vowelCount++;
+                            }
                         }
                     }
                 }
@@ -196,6 +203,7 @@ if(shortestAlphabeticValue == null
                 continue;
             }
 
+            // Special Character
             specialCharacters.add(item);
         }
 
@@ -204,17 +212,21 @@ if(shortestAlphabeticValue == null
         BigDecimal largest = null;
         BigDecimal smallest = null;
 
-        for(BigDecimal num : numbers) {
+        for (BigDecimal num : numbers) {
 
             sum = sum.add(num);
 
-            if(largest == null ||
-                    num.compareTo(largest) > 0)
-                largest = num;
+            if (largest == null
+                    || num.compareTo(largest) > 0) {
 
-            if(smallest == null ||
-                    num.compareTo(smallest) < 0)
+                largest = num;
+            }
+
+            if (smallest == null
+                    || num.compareTo(smallest) < 0) {
+
                 smallest = num;
+            }
         }
 
         Collections.sort(numbers);
@@ -224,21 +236,26 @@ if(shortestAlphabeticValue == null
                         .map(BigDecimal::toPlainString)
                         .toList();
 
+        int alphabetCount =
+                alphabetFrequency.values()
+                        .stream()
+                        .mapToInt(Integer::intValue)
+                        .sum();
+
+        int validProcessed =
+                request.getData().size()
+                        - invalidElements;
+
+        SummaryDTO summary =
+                new SummaryDTO(
+                        request.getData().size(),
+                        validProcessed,
+                        invalidElements
+                );
+
         long processingTime =
                 System.currentTimeMillis()
                         - startTime;
-        int alphabetCount =
-        alphabetFrequency.values()
-                .stream()
-                .mapToInt(Integer::intValue)
-                .sum();
-
-        SummaryDTO summary =
-        new SummaryDTO(
-                request.getData().size(),
-                unique.size(),
-                invalidElements
-        );
 
         return ResponseDTO.builder()
                 .isSuccess(true)
@@ -246,14 +263,10 @@ if(shortestAlphabeticValue == null
                 .requestId(requestId)
 
                 .oddNumbers(oddNumbers)
-
                 .evenNumbers(evenNumbers)
 
                 .alphabets(alphabets)
-
-                .specialCharacters(
-                        specialCharacters
-                )
+                .specialCharacters(specialCharacters)
 
                 .sum(sum.toPlainString())
 
@@ -269,13 +282,9 @@ if(shortestAlphabeticValue == null
                                 : smallest.toPlainString()
                 )
 
-                .alphabetCount(
-                                alphabetCount
-                )
+                .alphabetCount(alphabetCount)
 
-                .numberCount(
-                        numbers.size()
-                )
+                .numberCount(numbers.size())
 
                 .specialCharacterCount(
                         specialCharacters.size()
@@ -298,6 +307,16 @@ if(shortestAlphabeticValue == null
                 .sortedNumbers(
                         sortedNumbers
                 )
+
+                .longestAlphabeticValue(
+                        longestAlphabeticValue
+                )
+
+                .shortestAlphabeticValue(
+                        shortestAlphabeticValue
+                )
+
+                .summary(summary)
 
                 .processingTimeMs(
                         processingTime

@@ -35,14 +35,13 @@ public class ResponseDTO {
 
     private int vowelCount;
 
-    private Map<String,Integer> alphabetFrequency;
+    private Map<String, Integer> alphabetFrequency;
 
     private int uniqueElementCount;
 
     private List<String> sortedNumbers;
 
     private String longestAlphabeticValue;
-
     private String shortestAlphabeticValue;
 
     private long processingTimeMs;
