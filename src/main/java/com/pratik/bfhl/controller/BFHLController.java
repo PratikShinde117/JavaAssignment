@@ -15,7 +15,7 @@ public class BFHLController {
 
     @GetMapping("/")
     public String home() {
-        return "BFHL API Running Successfully";
+        return "BFHL API Running Successfully V2";
     }
 
     @GetMapping("/health")
