@@ -1,3 +1,18 @@
+package com.pratik.bfhl.controller;
+
+import com.pratik.bfhl.dto.RequestDTO;
+import com.pratik.bfhl.dto.ResponseDTO;
+import com.pratik.bfhl.service.BFHLService;
+
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
+
 @RestController
 @RequiredArgsConstructor
 public class BFHLController {
@@ -14,14 +29,16 @@ public class BFHLController {
             @RequestBody RequestDTO request,
             @RequestHeader("X-Request-Id") String requestId
     ) {
-        long start = System.currentTimeMillis();
 
-        return ResponseEntity.ok(
+        long startTime = System.currentTimeMillis();
+
+        ResponseDTO response =
                 service.processData(
                         request,
                         requestId,
-                        start
-                )
-        );
+                        startTime
+                );
+
+        return ResponseEntity.ok(response);
     }
 }
