@@ -18,10 +18,10 @@ public class BFHLController {
         return "BFHL API Running Successfully V2";
     }
 
-    @GetMapping("/health")
-    public ResponseEntity<String> health() {
-        return ResponseEntity.ok("UP");
-    }
+    @PostMapping("/health")
+public ResponseEntity<String> health() {
+    return ResponseEntity.ok("UP");
+}
 
     @PostMapping("/bfhl")
     public ResponseEntity<ResponseDTO> process(
