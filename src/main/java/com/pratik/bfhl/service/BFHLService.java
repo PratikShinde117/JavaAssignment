@@ -5,5 +5,9 @@ import com.pratik.bfhl.dto.ResponseDTO;
 
 public interface BFHLService {
 
-    ResponseDTO processData(RequestDTO request);
+    ResponseDTO processData(
+            RequestDTO request,
+            String requestId,
+            long startTime
+    );
 }

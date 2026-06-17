@@ -17,10 +17,18 @@ public class BFHLController {
 
     @PostMapping("/bfhl")
     public ResponseEntity<ResponseDTO> process(
-            @RequestBody RequestDTO request) {
+            @RequestBody RequestDTO request,
+            @RequestHeader("X-Request-Id") String requestId
+    ) {
+
+        long start = System.currentTimeMillis();
 
         return ResponseEntity.ok(
-                service.processData(request)
+                service.processData(
+                        request,
+                        requestId,
+                        start
+                )
         );
     }
 }
